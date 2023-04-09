@@ -11,37 +11,40 @@ import { Navigate, useParams } from 'react-router-dom';
 
 import { saveBookIds } from "../utils/localStorage";
 import { deleteBook } from "../utils/API";
-import { QUERY_ME } from "../utils/queries";
+import { QUERY_ME, QUERY_USER } from "../utils/queries";
 import Auth from "../utils/auth";
 import { removeBookId } from "../utils/localStorage";
 
 const SavedBooks = () => {
-  const [savedBookIds, setSavedBookIds] = useState([])
-  const { profileId } = useParams();
-  const { loading, data } = useQuery(QUERY_ME,
+  // const [userData, setUserData] = useState({});
+  const userId = Auth.getProfile().data._id
+
+  const { loading, data } = useQuery(
+     userId ? QUERY_USER : QUERY_ME,
     {
-      variables: {},
+      variables: { userId: userId },
     }
   );
   
   const userData = data?.me || data?.user || {};
+  console.log(userId)
+  console.log(userData)
 
-// const savedBookarry = userData.savedBooks
-// console.log(savedBookarry)
-
-// for (let i=0; i < savedBookarry.length; i++) {
-//   savedBookids.push(savedBookarry[i].bookId)
-// }
-
-// console.log(savedBookids)
-
-  if (Auth.loggedIn() && Auth.getProfile().data._id === profileId) {
-    console.log('hello')
+  if (Auth.loggedIn() && Auth.getProfile().data._id === userId) {
     return <Navigate to="/saved" />;
   }
 
   if (loading) {
     return <div>Loading...</div>;
+  }
+
+  if (!userData?.username) {
+    return (
+      <h4>
+        You need to be logged in to see your profile page. Use the navigation
+        links above to sign up or log in!
+      </h4>
+    );
   }
 
   // create function that accepts the book's mongo _id value as param and deletes the book from the database
@@ -56,7 +59,7 @@ const SavedBooks = () => {
       const response = await deleteBook(bookId, token);
 
       if (!response.ok) {
-        throw new Error("something went wrong!");
+        throw new Error('something went wrong!');
       }
 
       const updatedUser = await response.json();

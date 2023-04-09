@@ -29,7 +29,6 @@ module.exports = {
       // return res.status(400).json({ message: 'invalid token!' });
     }
     console.log(req.user)
-    // next();
     return req;
   },
   signToken: function ({ username, email, _id }) {
