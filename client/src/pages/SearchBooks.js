@@ -65,11 +65,18 @@ const SearchBooks = () => {
     if (!token) {
       return false;
     }
-    console.log(bookToSave)
+    console.log(bookToSave.title, bookToSave.bookId, bookToSave.description)
     console.log(token)
     try {
       const data = await saveBook({
-        variables: {bookData: {...bookToSave}, token}
+        variables: {
+          description: bookToSave.description, 
+          title: bookToSave.title, 
+          bookId: bookToSave.bookId, 
+          authors: bookToSave.authors,
+          link: bookToSave.link,
+          image: bookToSave.image,
+          token}
       });
       console.log(data)
     } catch (e) {

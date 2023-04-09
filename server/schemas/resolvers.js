@@ -50,13 +50,13 @@ const resolvers = {
     //     );
     //   }
     // }, 
-    saveBook: async (parent,  bookData , context) => {
+    saveBook: async (parent,  {authors, description, title, bookId, link, image} , context) => {
       console.log(context.user);
-      console.log(bookData);
+      console.log(authors, description, title, bookId);
       if (context.user) {
         return await User.findOneAndUpdate(
           { _id: context.user._id },
-          { $addToSet: { savedBooks: bookData } },
+          { $addToSet: {savedBooks: { authors: authors, description: description, bookId: bookId, title: title, link: link, image: image }, },},
           { new: true, runValidators: true }
         );
       }
