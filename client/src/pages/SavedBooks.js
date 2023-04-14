@@ -6,32 +6,40 @@ import {
   Card,
   Button,
 } from "react-bootstrap";
-import { useQuery } from "@apollo/client";
-import { Navigate, useParams } from 'react-router-dom';
+import { useQuery, useMutation } from "@apollo/client";
+import { Navigate, useParams } from "react-router-dom";
 
 import { saveBookIds } from "../utils/localStorage";
-import { deleteBook } from "../utils/API";
 import { QUERY_ME, QUERY_USER } from "../utils/queries";
+import { REMOVE_BOOK } from "../utils/mutations";
 import Auth from "../utils/auth";
 import { removeBookId } from "../utils/localStorage";
 
 const SavedBooks = () => {
   // const [userData, setUserData] = useState({});
-  const userId = Auth.getProfile().data._id
+  const userId = Auth.getProfile().data._id;
+  const [removeBook, { error }] = useMutation(REMOVE_BOOK, {
+  });
 
-  const { loading, data } = useQuery(
-     userId ? QUERY_USER : QUERY_ME,
-    {
-      variables: { userId: userId },
-    }
-  );
-  
+  const { loading, data } = useQuery(userId ? QUERY_USER : QUERY_ME, {
+    variables: { userId: userId },
+  });
+
   const userData = data?.me || data?.user || {};
-  console.log(userId)
-  console.log(userData)
+  console.log(userId);
+  console.log(userData);
 
-  if (Auth.loggedIn() && Auth.getProfile().data._id === userId) {
-    return <Navigate to="/saved" />;
+  // if (Auth.loggedIn() && Auth.getProfile().data._id === userId) {
+  //   return <Navigate to="/saved" />;
+  // }
+
+  if (!userId) {
+    return (
+      <h4>
+        You need to be logged in to see your profile page. Use the navigation
+        links above to sign up or log in!
+      </h4>
+    );
   }
 
   if (loading) {
@@ -48,24 +56,16 @@ const SavedBooks = () => {
   }
 
   // create function that accepts the book's mongo _id value as param and deletes the book from the database
-  const handleDeleteBook = async (bookId) => {
+  const handleDeleteBook = async (book) => {
     const token = Auth.loggedIn() ? Auth.getToken() : null;
-
     if (!token) {
       return false;
     }
-
+    console.log(book)
     try {
-      const response = await deleteBook(bookId, token);
-
-      if (!response.ok) {
-        throw new Error('something went wrong!');
-      }
-
-      const updatedUser = await response.json();
-      // setUserData(updatedUser);
-      // upon success, remove book's id from localStorage
-      removeBookId(bookId);
+      const { data } = await removeBook({
+        variables: { bookId: book.bookId, userId: userId  },
+      });
     } catch (err) {
       console.error(err);
     }
@@ -103,7 +103,7 @@ const SavedBooks = () => {
                   <Card.Text>{book.description}</Card.Text>
                   <Button
                     className="btn-block btn-danger"
-                    onClick={() => handleDeleteBook(book.bookId)}
+                    onClick={() => handleDeleteBook(book)}
                   >
                     Delete this Book!
                   </Button>

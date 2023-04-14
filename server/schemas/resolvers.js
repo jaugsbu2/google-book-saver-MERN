@@ -36,20 +36,6 @@ const resolvers = {
       const token = signToken(user);
       return { token, user };
     },
-    // saveBook: async (parent,  bookData) => {
-    //   // console.log(context.user);
-    //   console.log(bookData)
-    //   console.log(bookData._id);
-    //   const book = {"title": bookData.title, "bookId": bookData.bookId, "description": bookData.description}
-    //   console.log(book)
-    //   if (bookData._id) {
-    //     await User.findOneAndUpdate(
-    //       { _id: bookData._id },
-    //       { $addToSet: { savedBooks: book } },
-    //       { new: true, runValidators: true }
-    //     );
-    //   }
-    // }, 
     saveBook: async (parent,  {authors, description, title, bookId, link, image} , context) => {
       console.log(context.user);
       console.log(authors, description, title, bookId);
@@ -60,6 +46,17 @@ const resolvers = {
           { new: true, runValidators: true }
         );
       }
+    },
+    removeBook: async (parent, { bookId, userId }, context) => {
+      if (context.user) {
+        console.log(context.user)
+        return User.findOneAndUpdate(
+          { _id: context.user._id },
+          { $pull: { savedBooks:{ bookId: bookId} } },
+          // { new: true }
+        );
+      }
+      throw new AuthenticationError('You need to be logged in!');
     },
   },
 };
