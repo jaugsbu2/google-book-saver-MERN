@@ -1,4 +1,4 @@
-![license badge](/public/license-MIT-License-yellow.svg)
+![license badge](/client/public/license-MIT-License-yellow.svg)
 
   # Google Book Saver - GraphQL
 
@@ -16,18 +16,18 @@ This is an application that allows users to create an account and save books the
   - [Questions](#questions)
   
   ## Installation
-  
-  Please visit: https://jaugsbu2.github.io/portfolio-react/#about
+  NOTE: The heroku deployment of this application is not operating as anticipated where the windows.location reload and assign commands are used, please reload to the homepage after saving or deleting a book from the profile.   <br><br>
+  Please visit: https://stormy-sierra-88140.herokuapp.com/
   <br><br>
   Or to run locally on the integrated terminal run the sequence of comamands to start the application:<br><br>
   npm i<br>
-  npm start<br><br>
+  npm run develop<br><br>
 
   Open insomnia and test the routes shown below.
   
   ## Usage
   
-Click on the links in the top navigation bar and you will be directed to that section. To view the flexible styling of the website, resize the browser as desired. Click on any of the links within the Work section and you will be routed to the website showcasing that project, clicking on the github logo will take you to the github repo for that project.
+Create a profile by signing up with a username, email, and password. After signup, search for books by inputting text into the search box and pressing submit search. This searches the google books API and returns the most relevant results. Save a book to your profile by pressing save book. To see the saved books in your profile, navigate to See your Books. Here you can delete books from your profile by pressing Delete this book!
   
   ## License
 
@@ -36,7 +36,7 @@ Click on the links in the top navigation bar and you will be directed to that se
   
   ## Contributing
 
-  Please send a message in the application to get in touch with any suggestions.
+ Please refer to the Questions section for github repo and questions.
   
   ## Tests
 
@@ -46,5 +46,5 @@ Click on the links in the top navigation bar and you will be directed to that se
 
   Github: https://github.com/jaugsbu2
 
-  Please send a message in the application with any questions.
+  Email: joshua.augsburger08@gmail.com
 
