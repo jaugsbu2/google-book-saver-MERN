@@ -69,6 +69,9 @@ const SavedBooks = () => {
     } catch (err) {
       console.error(err);
     }
+    if (data) {
+      window.location.reload()
+    }
   };
 
   return (
